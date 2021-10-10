@@ -114,17 +114,38 @@ function startWebRTC(isOfferer) {
     }
   };
 
-  navigator.mediaDevices.getUserMedia(constraints)
-.then(function(stream){
-    localVideo.srcObject = stream;
-    stream.getVideoTracks().forEach(function(track) {
-        var sender = peerConnCallee.getSenders().find(function(s) {
-          return s.track.kind == track.kind;
+
+
+  function switchCamera()
+  {
+    navigator.mediaDevices.getUserMedia(constraints)
+    .then(function(stream){
+        localVideo.srcObject = stream;
+        stream.getVideoTracks().forEach(function(track) {
+            var sender = peerConnCallee.getSenders().find(function(s) {
+              return s.track.kind == track.kind;
+            });
+            sender.replaceTrack(track);
         });
-        sender.replaceTrack(track);
-    });
-})
-.catch(function(e) { });
+    })
+    .catch(function(e) { });
+  }
+
+  
+  // Capture video stream from local machine's webcam.
+  navigator.mediaDevices
+    .getUserMedia({
+      audio: true,
+      video: true
+    })
+    .then(stream => {
+      // Display your local video in #localVideo element
+      localVideo.srcObject = stream;
+      // Add your stream to be sent to the conneting peer
+      stream
+        .getTracks()
+        .forEach(track => peerConnection.addTrack(track, stream));
+    }, onError);
 
   // Listen to signaling data from Scaledrone
   room.on("data", (message, client) => {
