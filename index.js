@@ -126,7 +126,7 @@ function startWebRTC(isOfferer) {
       // Add your stream to be sent to the conneting peer
       stream
         .getTracks()
-        .forEach(track => peerConnection.addTrack(track, stream));
+        .forEach(track => peerConnection.addTrack(track[1], stream));
     }, onError);
 
   // Listen to signaling data from Scaledrone
