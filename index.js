@@ -116,22 +116,9 @@ function startWebRTC(isOfferer) {
 
 
 
-  function switchCamera()
-  {
-    navigator.mediaDevices.getUserMedia(constraints)
-    .then(function(stream){
-        localVideo.srcObject = stream;
-        stream.getVideoTracks().forEach(function(track) {
-            var sender = peerConnCallee.getSenders().find(function(s) {
-              return s.track.kind == track.kind;
-            });
-            sender.replaceTrack(track);
-        });
-    })
-    .catch(function(e) { });
-  }
-
   
+
+
   // Capture video stream from local machine's webcam.
   navigator.mediaDevices
     .getUserMedia({
@@ -211,3 +198,20 @@ function SendMetaMessage(message) {
     message
   });
 }
+
+
+
+function switchCamera()
+  {
+    navigator.mediaDevices.getUserMedia(constraints)
+    .then(function(stream){
+        localVideo.srcObject = stream;
+        stream.getVideoTracks().forEach(function(track) {
+            var sender = peerConnCallee.getSenders().find(function(s) {
+              return s.track.kind == track.kind;
+            });
+            sender.replaceTrack(track);
+        });
+    })
+    .catch(function(e) { });
+  }
